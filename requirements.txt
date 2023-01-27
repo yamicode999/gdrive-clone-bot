@@ -1,0 +1,8 @@
+python-dotenv
+python-telegram-bot==13.5
+psutil
+telegraph
+google-api-python-client
+tenacity
+flask
+gunicorn

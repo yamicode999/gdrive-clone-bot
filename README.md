@@ -1,0 +1,1 @@
+This project is a direct modification of [mirror-leech-telegram-bot](https://github.com/anasty17/mirror-leech-telegram-bot) by @anasty17, keeping only the cloning related features for people who only need a good cloning bot. The bot is very lightweight and can be hosted on most free tier PaaS plans.
