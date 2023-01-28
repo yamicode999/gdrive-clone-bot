@@ -85,6 +85,10 @@ NOTE: Try each command without any argument to see more detalis.
 
 def bot_help(update, context):
     sendMessage(help_string, context.bot, update.message)
+    
+def duplicate_instance_handler(update, context):
+    if isinstance(context.error, Conflict):
+        LOGGER.warning("Duplicate instance detected! If this bot was deployed on Render, you can ignore this.")
 
 def main():
     if ospath.isfile(".restartmsg"):
@@ -113,11 +117,9 @@ def main():
     dispatcher.add_handler(help_handler)
     dispatcher.add_handler(stats_handler)
     
-    try:
-        updater.start_polling()
-    except Conflict:
-        LOGGER.warning("Possible Render Idiocy Detected! You can ignore this.")
-        pass
+    dispatcher.add_error_handler(duplicate_instance_handler)
+    
+    updater.start_polling()
     
     LOGGER.info("Bot Started!")
 
