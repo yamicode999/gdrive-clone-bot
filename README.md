@@ -23,7 +23,7 @@ This project is a direct modification of [mirror-leech-telegram-bot](https://git
     TOKEN_PICKLE = "" # direct link to token.pickle file
     ACCOUNTS_ZIP = "" # direct link to accounts.zip file
     UPSTREAM_REPO = "https://github.com/culturecloud/gdrive-clone-bot" # don't change this to keep the bot up-to-date
-    UPSTREAM_REPO = "master" # don't change this
+    UPSTREAM_BRANCH = "master" # don't change this
     GDRIVE_ID = ""
     IS_TEAM_DRIVE = "True"
     STOP_DUPLICATE = "True" # or False
