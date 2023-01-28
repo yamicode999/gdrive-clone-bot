@@ -1,6 +1,15 @@
 # WHAT THE FUCK IS THIS!?
 
 This project is a direct modification of [mirror-leech-telegram-bot](https://github.com/anasty17/mirror-leech-telegram-bot) by @anasty17, keeping only the cloning related features for people who only need a good cloning bot. The bot is very lightweight and can be hosted on most free tier PaaS plans.
+<p align="center"><img src="https://i.ibb.co/MnqNByY/Screenshot-20230128-090728-Nekogram.png" /></p>
+
+## Features
+- [x] Clone public Google Drive links.
+- [x] Clone private Google Drive links (with access).
+- [x] Search in drives recursively, see results in Telegraph Instant View.
+- [x] Count files/folders in a folder by link.
+- [x] Delete files/folders by link.
+- [x] Built-in updater, portable configuration. Configure bot settings & stay up-to-date with the source, without redeploying!
 
 ## How the fuck do you setup this shit?
 1. Google Credentials! Create a `token.pickle` file and/or `accounts.zip` (for SA support). Follow [this guide](https://github.com/weebzone/WZML/wiki/Deployment#getting-google-oauth-api-credential-file-and-tokenpickle) to obtain them.
@@ -34,6 +43,7 @@ This project is a direct modification of [mirror-leech-telegram-bot](https://git
 - If you want to update the bot to use latest code, keep upstream variables and just `/restart` it!
 
 ## Planned Features
-- [ ] Setup Google credentials (token.pickle) using the bot itself.
-- [ ] Store Google credentials using MongoDB, making the bot completely plug and play!
+- [ ] Setup Google credentials (token.pickle) using the bot interface.
+- [ ] Choosing destination drive using the bot interface.
+- [ ] Auto resume support, bot will automatically resume cloning from where it stopped. (If it stops accidentally)
 - [ ] TD to TD auto/scheduled sync.
