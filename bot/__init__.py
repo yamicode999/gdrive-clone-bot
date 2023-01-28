@@ -1,4 +1,5 @@
 from logging import getLogger, FileHandler, StreamHandler, INFO, basicConfig, error as log_error, info as log_info, warning as log_warning
+import sys
 from socket import setdefaulttimeout
 from faulthandler import enable as faulthandler_enable
 from telegram.ext import Updater as tgUpdater, Defaults
@@ -38,30 +39,35 @@ status_reply_dict = {}
 # Key: update.message.message_id
 # Value: An object of Status
 download_dict = {}
-# key: rss_title
-# value: {link, last_feed, last_title, filter}
-()
+
 if ospath.exists('log.txt'):
     with open('log.txt', 'r+') as f:
         f.truncate(0)
-                    
-if 'CONFIG_ENV' in environ:
+
+CONFIG_ENV = environ.get('CONFIG_ENV', None)
+if CONFIG_ENV:
     log_info("CONFIG_ENV variable found! Downloading config file ...")
-    download_file = srun(["curl", "-sL", f"{environ.get('CONFIG_ENV')}", "-o", "config.env"])
+    download_file = srun(["curl", "-sL", f"{CONFIG_ENV}", "-o", "config.env"])
     if download_file.returncode == 0:
         log_info("Config file downloaded as 'config.env'")
     else:
         log_error("Something went wrong while downloading config file! please recheck the CONFIG_ENV variable")
+        sys.exit(1)
+else:
+    log_warning("CONFIG_ENV variable not found! exiting ...")
+    sys.exit(1)
 
-if 'TOKEN_PICKLE' in environ:
+TOKEN_PICKLE = environ.get('TOKEN_PICKLE', None)
+if TOKEN_PICKLE:
     log_info("TOKEN_PICKLE variable found! Downloading token.pickle file ...")
-    download_file = srun(["curl", "-sL", f"{environ.get('TOKEN_PICKLE')}", "-o", "token.pickle"])
+    download_file = srun(["curl", "-sL", f"{TOKEN_PICKLE}", "-o", "token.pickle"])
     if download_file.returncode == 0:
         log_info("Pickle file downloaded as 'token.pickle'")
     else:
         log_error("Something went wrong while downloading token.pickle file! please recheck the TOKEN_PICKLE variable")
 
-if 'ACCOUNTS_ZIP' in environ:
+ACCOUNTS_ZIP = environ.get('ACCOUNTS_ZIP', None)
+if ACCOUNTS_ZIP:
     log_info("ACCOUNTS_ZIP variable found! Downloading accounts.zip file ...")
     download_file = srun(["curl", "-sL", f"{environ.get('ACCOUNTS_ZIP')}", "-o", "accounts.zip"])
     if download_file.returncode == 0:
@@ -77,13 +83,13 @@ if len(UPSTREAM_REPO) == 0:
 
 UPSTREAM_BRANCH = environ.get('UPSTREAM_BRANCH', '')
 if len(UPSTREAM_BRANCH) == 0:
-    UPSTREAM_BRANCH = 'master'
+    UPSTREAM_BRANCH = 'main'
 
 if UPSTREAM_REPO:
     if ospath.exists('.git'):
         srun(["rm", "-rf", ".git"])
 
-    update = srun([f"git init -q \
+    fetch_updates = srun([f"git init -q \
                      && git config --global user.email pseudokawaii@gmail.com \
                      && git config --global user.name pseudokawaii \
                      && git add . \
@@ -92,18 +98,15 @@ if UPSTREAM_REPO:
                      && git fetch origin -q \
                      && git reset --hard origin/{UPSTREAM_BRANCH} -q"], shell=True)
 
-    if update.returncode == 0:
+    if fetch_updates.returncode == 0:
         log_info('Successfully updated with latest commit from UPSTREAM_REPO')
     else:
-        log_error('Something went wrong while updating, check UPSTREAM_REPO if valid or not!')
-
+        log_error('Something went wrong while updating, recheck UPSTREAM_REPO variable!')
 
 BOT_TOKEN = environ.get('BOT_TOKEN', '')
 if len(BOT_TOKEN) == 0:
     log_error("BOT_TOKEN variable is missing! Exiting now")
     exit(1)
-
-bot_id = int(BOT_TOKEN.split(':', 1)[0])
 
 OWNER_ID = environ.get('OWNER_ID', '')
 if len(OWNER_ID) == 0:
