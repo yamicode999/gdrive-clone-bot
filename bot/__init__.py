@@ -3,7 +3,7 @@ from socket import setdefaulttimeout
 from faulthandler import enable as faulthandler_enable
 from telegram.ext import Updater as tgUpdater, Defaults
 from os import remove as osremove, path as ospath, environ
-from subprocess import Popen, run as srun
+from subprocess import Popen, run as srun, PIPE
 from time import sleep, time
 from threading import Thread, Lock
 from dotenv import load_dotenv
@@ -17,27 +17,18 @@ setdefaulttimeout(600)
 
 botStartTime = time()
 
-basicConfig(format='[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s',
+basicConfig(format='[%(levelname)s] [%(name)s] %(message)s',
                     handlers=[FileHandler('log.txt'), StreamHandler()],
                     level=INFO)
 
 LOGGER = getLogger(__name__)
 
-load_dotenv('config.env', override=True)
-
 Interval = []
 DRIVES_NAMES = []
 DRIVES_IDS = []
 INDEX_URLS = []
-GLOBAL_EXTENSION_FILTER = []
+GLOBAL_EXTENSION_FILTER = ['.html', '.php']
 user_data = {}
-
-try:
-    if bool(environ.get('_____REMOVE_THIS_LINE_____')):
-        log_error('The README.md file there to be read! Exiting now!')
-        exit()
-except:
-    pass
 
 download_dict_lock = Lock()
 status_reply_dict_lock = Lock()
@@ -49,6 +40,63 @@ status_reply_dict = {}
 download_dict = {}
 # key: rss_title
 # value: {link, last_feed, last_title, filter}
+()
+if ospath.exists('log.txt'):
+    with open('log.txt', 'r+') as f:
+        f.truncate(0)
+                    
+if 'CONFIG_ENV' in environ:
+    log_info("CONFIG_ENV variable found! Downloading config file ...")
+    download_file = srun(["curl", "-sL", f"{environ.get('CONFIG_ENV')}", "-o", "config.env"])
+    if download_file.returncode == 0:
+        log_info("Config file downloaded as 'config.env'")
+    else:
+        log_error("Something went wrong while downloading config file! please recheck the CONFIG_ENV variable")
+
+if 'TOKEN_PICKLE' in environ:
+    log_info("TOKEN_PICKLE variable found! Downloading config file ...")
+    download_file = srun(["curl", "-sL", f"{environ.get('TOKEN_PICKLE')}", "-o", "token.pickle"])
+    if download_file.returncode == 0:
+        log_info("Pickle file downloaded as 'token.pickle'")
+    else:
+        log_error("Something went wrong while downloading token.pickle file! please recheck the TOKEN_PICKLE variable")
+
+if 'ACCOUNTS_ZIP' in environ:
+    log_info("ACCOUNTS_ZIP variable found! Downloading accounts.zip file ...")
+    download_file = srun(["curl", "-sL", f"{environ.get('ACCOUNTS_ZIP')}", "-o", "accounts.zip"])
+    if download_file.returncode == 0:
+        log_info("Service Accounts zip file downloaded as 'accounts.zip'")
+    else:
+        log_error("Something went wrong while downloading Service Accounts zip file! please recheck the ACCOUNTS_ZIP variable")
+
+load_dotenv('config.env', override=True)
+
+UPSTREAM_REPO = environ.get('UPSTREAM_REPO', '')
+if len(UPSTREAM_REPO) == 0:
+   UPSTREAM_REPO = None
+
+UPSTREAM_BRANCH = environ.get('UPSTREAM_BRANCH', '')
+if len(UPSTREAM_BRANCH) == 0:
+    UPSTREAM_BRANCH = 'master'
+
+if UPSTREAM_REPO:
+    if ospath.exists('.git'):
+        srun(["rm", "-rf", ".git"])
+
+    update = srun([f"git init -q \
+                     && git config --global user.email pseudokawaii@gmail.com \
+                     && git config --global user.name pseudokawaii \
+                     && git add . \
+                     && git commit -sm update -q \
+                     && git remote add origin {UPSTREAM_REPO} \
+                     && git fetch origin -q \
+                     && git reset --hard origin/{UPSTREAM_BRANCH} -q"], shell=True)
+
+    if update.returncode == 0:
+        log_info('Successfully updated with latest commit from UPSTREAM_REPO')
+    else:
+        log_error('Something went wrong while updating, check UPSTREAM_REPO if valid or not!')
+
 
 BOT_TOKEN = environ.get('BOT_TOKEN', '')
 if len(BOT_TOKEN) == 0:
@@ -82,7 +130,7 @@ if len(GDRIVE_ID) == 0:
 
 DOWNLOAD_DIR = environ.get('DOWNLOAD_DIR', '')
 if len(DOWNLOAD_DIR) == 0:
-    DOWNLOAD_DIR = '/usr/src/app/downloads/'
+    DOWNLOAD_DIR = '/project/downloads/'
 elif not DOWNLOAD_DIR.endswith("/"):
     DOWNLOAD_DIR = f'{DOWNLOAD_DIR}/'
 
@@ -113,6 +161,12 @@ STATUS_LIMIT = '' if len(STATUS_LIMIT) == 0 else int(STATUS_LIMIT)
 
 CMD_SUFFIX = environ.get('CMD_SUFFIX', '')
 
+SERVER_PORT = environ.get('SERVER_PORT', '') or environ.get('PORT', '')
+if len(SERVER_PORT) == 0:
+    SERVER_PORT = 80
+else:
+    SERVER_PORT = int(SERVER_PORT)
+
 STOP_DUPLICATE = environ.get('STOP_DUPLICATE', '')
 STOP_DUPLICATE = STOP_DUPLICATE.lower() == 'true'
 
@@ -134,6 +188,7 @@ config_dict = {'AUTHORIZED_CHATS': AUTHORIZED_CHATS,
                'INDEX_URL': INDEX_URL,
                'IS_TEAM_DRIVE': IS_TEAM_DRIVE,
                'OWNER_ID': OWNER_ID,
+               'SERVER_PORT': SERVER_PORT,
                'STATUS_LIMIT': STATUS_LIMIT,
                'STATUS_UPDATE_INTERVAL': STATUS_UPDATE_INTERVAL,
                'STOP_DUPLICATE': STOP_DUPLICATE,
@@ -155,6 +210,9 @@ if ospath.exists('accounts.zip'):
 if not ospath.exists('accounts'):
     config_dict['USE_SERVICE_ACCOUNTS'] = False
 sleep(0.5)
+
+Popen(["gunicorn", "web.wserver:app", "--bind", f"0.0.0.0:{SERVER_PORT}", "--access-logfile", "/dev/null", "--error-logfile", "/dev/null"])
+log_info(f"HTTP server started at port {SERVER_PORT}")
 
 tgDefaults = Defaults(parse_mode='HTML', disable_web_page_preview=True, allow_sending_without_reply=True, run_async=True)
 updater = tgUpdater(token=BOT_TOKEN, defaults=tgDefaults, request_kwargs={'read_timeout': 20, 'connect_timeout': 15})

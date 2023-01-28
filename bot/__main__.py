@@ -38,17 +38,24 @@ def stats(update, context):
 
 def start(update, context):
     buttons = ButtonMaker()
-    buttons.buildbutton("Repo", "https://www.github.com/anasty17/mirror-leech-telegram-bot")
-    buttons.buildbutton("Owner", "https://www.github.com/anasty17")
+    buttons.buildbutton("Repo", "https://www.github.com/culturecloud/gdrive-clone-bot")
+    buttons.buildbutton("Support", "https://t.me/pseudokawaii")
     reply_markup = buttons.build_menu(2)
     if CustomFilters.authorized_user(update) or CustomFilters.authorized_chat(update):
         start_string = f'''
-This bot can mirror all your links to Google Drive or to telegram!
-Type /{BotCommands.HelpCommand} to get a list of available commands
+This bot can help you clone, delete, list Google Drive files/folders (public/private with access). Service accounts, index link generation supported.\n\nType /{BotCommands.HelpCommand} to get a list of available commands
 '''
         sendMessage(start_string, context.bot, update.message, reply_markup)
     else:
         sendMessage('Not an Authorized user, deploy your own mirror-leech bot', context.bot, update.message, reply_markup)
+
+def restart(update, context):
+    restart_message = sendMessage("Restarting...", context.bot, update.message)
+    srun(["pkill", "-9", "-f", "gunicorn"])
+    with open(".restartmsg", "w") as f:
+        f.truncate(0)
+        f.write(f"{restart_message.chat.id}\n{restart_message.message_id}\n")
+    osexecl(executable, executable, "-m", "bot")
 
 def ping(update, context):
     start_time = int(round(time() * 1000))
@@ -64,6 +71,7 @@ NOTE: Try each command without any argument to see more detalis.
 /{BotCommands.CancelMirror}: Cancel task by gid or reply.
 /{BotCommands.CancelAllCommand} [query]: Cancel all [status] tasks.
 /{BotCommands.ListCommand} [query]: Search in Google Drive(s).
+/{BotCommands.RestartCommand}: Restart and update the bot (Only Owner & Sudo).
 /{BotCommands.StatusCommand}: Shows a status of all the downloads.
 /{BotCommands.StatsCommand}: Show stats of the machine where the bot is hosted in.
 /{BotCommands.PingCommand}: Check how long it takes to Ping the Bot (Only Owner & Sudo).
@@ -73,7 +81,17 @@ def bot_help(update, context):
     sendMessage(help_string, context.bot, update.message)
 
 def main():
+    if ospath.isfile(".restartmsg"):
+        with open(".restartmsg") as f:
+            chat_id, msg_id = map(int, f)
+        try:
+            bot.edit_message_text("Restarted Successfully!", chat_id, msg_id)
+        except:
+            pass
+        osremove(".restartmsg")
     start_handler = CommandHandler(BotCommands.StartCommand, start)
+    restart_handler = CommandHandler(BotCommands.RestartCommand, restart,
+                                        filters=CustomFilters.owner_filter)
     ping_handler = CommandHandler(BotCommands.PingCommand, ping,
                                filters=CustomFilters.authorized_chat | CustomFilters.authorized_user)
     help_handler = CommandHandler(BotCommands.HelpCommand, bot_help,
@@ -82,6 +100,7 @@ def main():
                                filters=CustomFilters.authorized_chat | CustomFilters.authorized_user)
 
     dispatcher.add_handler(start_handler)
+    dispatcher.add_handler(restart_handler)
     dispatcher.add_handler(ping_handler)
     dispatcher.add_handler(help_handler)
     dispatcher.add_handler(stats_handler)
@@ -90,5 +109,4 @@ def main():
     LOGGER.info("Bot Started!")
 
 main()
-
 main_loop.run_forever()
