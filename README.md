@@ -23,12 +23,13 @@ This project is a direct modification of [mirror-leech-telegram-bot](https://git
     TOKEN_PICKLE = "" # direct link to token.pickle file
     ACCOUNTS_ZIP = "" # direct link to accounts.zip file
     UPSTREAM_REPO = "https://github.com/culturecloud/gdrive-clone-bot" # don't change this to keep the bot up-to-date
-    UPSTREAM_BRANCH = "master" # don't change this
+    UPSTREAM_BRANCH = "main" # don't change this
     GDRIVE_ID = ""
     IS_TEAM_DRIVE = "True"
     STOP_DUPLICATE = "True" # or False
     INDEX_URL = "https://something.someone.workers.dev/0:" # you know what to set
     VIEW_LINK = "False" # or True
+    CMD_SUFFIX = ""
     STATUS_LIMIT = "4" # no need to change
     ```
 5. Copy the gist's raw URL. It should look something like this:
