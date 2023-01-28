@@ -69,18 +69,19 @@ def log(update, context):
     sendLogFile(context.bot, update.message)
 
 help_string = f'''
-NOTE: Try each command without any argument to see more detalis.
-/{BotCommands.CloneCommand} [drive_url]: Copy file/folder to Google Drive.
-/{BotCommands.CountCommand} [drive_url]: Count file/folder of Google Drive.
-/{BotCommands.DeleteCommand} [drive_url]: Delete file/folder from Google Drive (Only Owner & Sudo).
-/{BotCommands.CancelMirror}: Cancel task by gid or reply.
-/{BotCommands.CancelAllCommand} [query]: Cancel all [status] tasks.
-/{BotCommands.ListCommand} [query]: Search in Google Drive(s).
-/{BotCommands.LogCommand}: Get a log file of the bot. Handy for getting crash reports (Only Owner & Sudo).
-/{BotCommands.RestartCommand}: Restart and update the bot (Only Owner & Sudo).
-/{BotCommands.StatusCommand}: Shows a status of all the downloads.
-/{BotCommands.StatsCommand}: Show stats of the machine where the bot is hosted in.
-/{BotCommands.PingCommand}: Check how long it takes to Ping the Bot (Only Owner & Sudo).
+👉 /{BotCommands.CloneCommand} [drive_url] : `Copy file/folder to Google Drive.`
+👉 /{BotCommands.CountCommand} [drive_url] : `Count file/folder of Google Drive.`
+👉 /{BotCommands.DeleteCommand} [drive_url] : `Delete file/folder from Google Drive (Only Owner & Sudo).`
+👉 /{BotCommands.CancelMirror} : `Cancel task by gid or reply.`
+👉 /{BotCommands.CancelAllCommand} [query] : `Cancel all [status] tasks.`
+👉 /{BotCommands.ListCommand} [query] : `Search in Google Drive(s).`
+👉 /{BotCommands.LogCommand} : `Get a log file of the bot. Handy for getting crash reports (Owner Only).`
+👉 /{BotCommands.RestartCommand} : `Restart and update the bot (Owner Only).`
+👉 /{BotCommands.StatusCommand} : `Shows a status of all the downloads.`
+👉 /{BotCommands.StatsCommand} : `Show stats of the machine where the bot is hosted in.`
+👉 /{BotCommands.PingCommand} : `Check how long it takes to Ping the Bot (Owner Only).`
+
+NOTE: __Try each command without any argument to see more detalis.__
 '''
 
 def bot_help(update, context):

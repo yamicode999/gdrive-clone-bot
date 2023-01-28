@@ -16,6 +16,7 @@ class _BotCommands:
         self.UnAuthorizeCommand = f'unauthorize{CMD_SUFFIX}'
         self.PingCommand = f'ping{CMD_SUFFIX}'
         self.RestartCommand = f'restart{CMD_SUFFIX}'
+        self.StatusCommand = f'status{CMD_SUFFIX}'
         self.StatsCommand = f'stats{CMD_SUFFIX}'
         self.HelpCommand = f'help{CMD_SUFFIX}'
         
