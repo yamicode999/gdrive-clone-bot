@@ -18,6 +18,14 @@ ENV TINI_VERSION v0.19.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 RUN chmod +x /tini
 
+RUN DEBIAN_FRONTEND="noninteractive" \
+    apt-get -y update \
+    && apt-get -y --no-install-recommends install \
+    curl \
+    && apt-get -y clean \
+    && apt-get -y autoremove \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 WORKDIR /project/
 
 RUN useradd -m -r culturecloud && \

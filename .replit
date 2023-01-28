@@ -1,4 +1,0 @@
-run = "reset; chmod +x start-repl.sh; bash start-repl.sh"
-
-[nix]
-channel = "unstable"
