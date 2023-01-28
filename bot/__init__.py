@@ -54,7 +54,7 @@ if 'CONFIG_ENV' in environ:
         log_error("Something went wrong while downloading config file! please recheck the CONFIG_ENV variable")
 
 if 'TOKEN_PICKLE' in environ:
-    log_info("TOKEN_PICKLE variable found! Downloading config file ...")
+    log_info("TOKEN_PICKLE variable found! Downloading token.pickle file ...")
     download_file = srun(["curl", "-sL", f"{environ.get('TOKEN_PICKLE')}", "-o", "token.pickle"])
     if download_file.returncode == 0:
         log_info("Pickle file downloaded as 'token.pickle'")

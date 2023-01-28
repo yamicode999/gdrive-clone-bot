@@ -13,6 +13,8 @@ This project is a direct modification of [mirror-leech-telegram-bot](https://git
     TELEGRAM_HASH = ""
     TOKEN_PICKLE = "" # direct link to token.pickle file
     ACCOUNTS_ZIP = "" # direct link to accounts.zip file
+    UPSTREAM_REPO = "https://github.com/culturecloud/gdrive-clone-bot" # don't change this to keep the bot up-to-date
+    UPSTREAM_REPO = "master" # don't change this
     GDRIVE_ID = ""
     IS_TEAM_DRIVE = "True"
     STOP_DUPLICATE = "True" # or False
@@ -20,14 +22,16 @@ This project is a direct modification of [mirror-leech-telegram-bot](https://git
     VIEW_LINK = "False" # or True
     STATUS_LIMIT = "4" # no need to change
     ```
-4. Copy the gist's raw URL. It should look something like this:
+5. Copy the gist's raw URL. It should look something like this:
     `https://gist.github.com/user/2d59b1ec7a6903532/raw/012b5e033488f77ff5c/config.env`
-5. Remove the revision ID after `/raw`, along with a slash. The URL should now look like this:
+6. Remove the revision ID after `/raw`, along with a slash. The URL should now look like this:
     `https://gist.github.com/user/2b6a322ec7a903532/raw/config.env`
-6. Set the URL as the value of the `CONFIG_ENV` variable where you want to deploy the bot. This is the only variable you need to set.
-7. Deploy the bot.
+7. Set the URL as the value of the `CONFIG_ENV` variable where you want to deploy the bot. This is the only variable you need to set.
+8. Deploy the bot.
 
-You can edit the configuration on gist.github.com and restart the bot using the `/restart` command. The bot will use the new configuration upon restart, so there is no need to redeploy it.
+## Exrtra Notes
+- You can edit the configuration on gist.github.com and restart the bot using the `/restart` command. The bot will use the new configuration upon restart, so there is no need to redeploy it.
+- If you want to update the bot to use latest code, keep upstream variables and just `/restart` it!
 
 ## Planned Features
 - [ ] Setup Google credentials (token.pickle) using the bot itself.

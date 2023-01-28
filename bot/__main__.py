@@ -51,6 +51,7 @@ This bot can help you clone, delete, list Google Drive files/folders (public/pri
 
 def restart(update, context):
     restart_message = sendMessage("Restarting...", context.bot, update.message)
+    LOGGER.info("Stopping HTTP server ...")
     srun(["pkill", "-9", "-f", "gunicorn"])
     with open(".restartmsg", "w") as f:
         f.truncate(0)
