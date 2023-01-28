@@ -22,6 +22,8 @@ RUN DEBIAN_FRONTEND="noninteractive" \
     apt-get -y update \
     && apt-get -y --no-install-recommends install \
     curl \
+    git \
+    procps \
     && apt-get -y clean \
     && apt-get -y autoremove \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
