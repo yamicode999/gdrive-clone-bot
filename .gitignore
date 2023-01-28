@@ -194,4 +194,5 @@ data*
 log.txt
 accounts/*
 list_drives.txt
+.restartmsg
 downloads
