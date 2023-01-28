@@ -5,6 +5,7 @@ from psutil import disk_usage, cpu_percent, swap_memory, cpu_count, virtual_memo
 from time import time
 from sys import executable
 from telegram.ext import CommandHandler
+from telegram.error import Conflict
 
 from bot import bot, dispatcher, updater, botStartTime, LOGGER, Interval, main_loop
 from .helper.ext_utils.bot_utils import get_readable_time, get_readable_file_size
@@ -111,8 +112,13 @@ def main():
     dispatcher.add_handler(log_handler)
     dispatcher.add_handler(help_handler)
     dispatcher.add_handler(stats_handler)
-
-    updater.start_polling()
+    
+    try:
+        updater.start_polling()
+    except Conflict:
+        LOGGER.warning("Possible Render Idiocy Detected! You can ignore this.")
+        pass
+    
     LOGGER.info("Bot Started!")
 
 main()
