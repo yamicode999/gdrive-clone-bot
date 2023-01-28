@@ -16,21 +16,29 @@ This project is a direct modification of [mirror-leech-telegram-bot](https://git
 2. Upload the credential files to a secure location where you can obtain a direct link to them. Such as your root drive's personal index.
 3. Create a gist named `something.env`. Fill in the following variables and add them to the gist:
     ```
-    BOT_TOKEN = ""
-    OWNER_ID = ""
+    # Required Variables
     TELEGRAM_API = ""
     TELEGRAM_HASH = ""
-    TOKEN_PICKLE = "" # direct link to token.pickle file
+    OWNER_ID = ""
+    BOT_TOKEN = ""
+    
+    # Optional (but required) Variables
     ACCOUNTS_ZIP = "" # direct link to accounts.zip file
-    UPSTREAM_REPO = "https://github.com/culturecloud/gdrive-clone-bot" # don't change this to keep the bot up-to-date
-    UPSTREAM_BRANCH = "main" # don't change this
-    GDRIVE_ID = ""
-    IS_TEAM_DRIVE = "True"
-    STOP_DUPLICATE = "True" # or False
-    INDEX_URL = "https://something.someone.workers.dev/0:" # you know what to set
-    VIEW_LINK = "False" # or True
+    AUTHORIZED_CHATS = ""
+    AUTO_DELETE_MESSAGE_DURATION = "30"
     CMD_SUFFIX = ""
+    GDRIVE_ID = ""
+    INDEX_URL = "https://something.someone.workers.dev/0:" # you know what to set
+    IS_TEAM_DRIVE = "True"
+    SERVER_PORT = "" # don't set anything if you're deploying on Render
     STATUS_LIMIT = "4" # no need to change
+    STATUS_UPDATE_INTERVAL = "10" # no need to change
+    STOP_DUPLICATE = "True" # or False
+    TOKEN_PICKLE = "" # direct link to token.pickle file
+    UPSTREAM_BRANCH = "main" # don't change this
+    UPSTREAM_REPO = "https://github.com/culturecloud/gdrive-clone-bot" # don't change this to keep the bot up-to-date
+    USE_SERVICE_ACCOUNTS = "True" # or False
+    VIEW_LINK = "False" # or True
     ```
 5. Copy the gist's raw URL. It should look something like this:
     `https://gist.github.com/user/2d59b1ec7a6903532/raw/012b5e033488f77ff5c/config.env`
