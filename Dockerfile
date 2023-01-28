@@ -36,7 +36,5 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 COPY . .
 
-USER culturecloud
-
 ENTRYPOINT ["/tini", "--"]
 CMD ["python3", "-m", "bot"]
