@@ -29,9 +29,7 @@ RUN DEBIAN_FRONTEND="noninteractive" \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 WORKDIR /project/
-
-RUN useradd -m -r culturecloud && \
-    chown culturecloud /project/
+RUN chmod 777 /project/
 
 COPY --from=compiler /opt/venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
