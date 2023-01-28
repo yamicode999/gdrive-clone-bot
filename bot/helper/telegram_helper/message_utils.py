@@ -85,3 +85,9 @@ def sendStatusMessage(msg, bot):
         status_reply_dict[msg.chat.id] = [message, time()]
         if not Interval:
             Interval.append(setInterval(config_dict['STATUS_UPDATE_INTERVAL'], update_all_messages))
+
+def sendLogFile(bot, message):
+    with open('log.txt', 'rb') as f:
+        bot.sendDocument(document=f, filename=f.name, reply_to_message_id=message.message_id,
+                         chat_id=message.chat_id)
+

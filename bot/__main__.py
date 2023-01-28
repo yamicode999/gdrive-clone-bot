@@ -9,7 +9,7 @@ from telegram.ext import CommandHandler
 from bot import bot, dispatcher, updater, botStartTime, LOGGER, Interval, main_loop
 from .helper.ext_utils.bot_utils import get_readable_time, get_readable_file_size
 from .helper.telegram_helper.bot_commands import BotCommands
-from .helper.telegram_helper.message_utils import sendMessage, editMessage
+from .helper.telegram_helper.message_utils import sendMessage, editMessage, sendLogFile
 from .helper.telegram_helper.filters import CustomFilters
 from .helper.telegram_helper.button_build import ButtonMaker
 from .modules import list, cancel_mirror, clone, delete, count
@@ -64,6 +64,9 @@ def ping(update, context):
     end_time = int(round(time() * 1000))
     editMessage(f'{end_time - start_time} ms', reply)
 
+def log(update, context):
+    sendLogFile(context.bot, update.message)
+
 help_string = f'''
 NOTE: Try each command without any argument to see more detalis.
 /{BotCommands.CloneCommand} [drive_url]: Copy file/folder to Google Drive.
@@ -95,6 +98,7 @@ def main():
                                         filters=CustomFilters.owner_filter)
     ping_handler = CommandHandler(BotCommands.PingCommand, ping,
                                filters=CustomFilters.authorized_chat | CustomFilters.authorized_user)
+    log_handler = CommandHandler(BotCommands.LogCommand, log, filters=CustomFilters.owner_filter)
     help_handler = CommandHandler(BotCommands.HelpCommand, bot_help,
                                filters=CustomFilters.authorized_chat | CustomFilters.authorized_user)
     stats_handler = CommandHandler(BotCommands.StatsCommand, stats,
@@ -103,6 +107,7 @@ def main():
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(restart_handler)
     dispatcher.add_handler(ping_handler)
+    dispatcher.add_handler(log_handler)
     dispatcher.add_handler(help_handler)
     dispatcher.add_handler(stats_handler)
 
