@@ -13,7 +13,7 @@ from .helper.telegram_helper.bot_commands import BotCommands
 from .helper.telegram_helper.message_utils import sendMessage, editMessage, sendLogFile
 from .helper.telegram_helper.filters import CustomFilters
 from .helper.telegram_helper.button_build import ButtonMaker
-from .modules import list, cancel_mirror, clone, delete, count
+from .modules import list, cancel_mirror, clone, delete, count, mirror_status
 
 
 def stats(update, context):
@@ -48,7 +48,7 @@ This bot can help you clone, delete, list Google Drive files/folders (public/pri
 '''
         sendMessage(start_string, context.bot, update.message, reply_markup)
     else:
-        sendMessage('Not an Authorized user, deploy your own mirror-leech bot', context.bot, update.message, reply_markup)
+        sendMessage('Not an Authorized user, deploy your own clone bot', context.bot, update.message, reply_markup)
 
 def restart(update, context):
     restart_message = sendMessage("Restarting...", context.bot, update.message)
@@ -69,19 +69,24 @@ def log(update, context):
     sendLogFile(context.bot, update.message)
 
 help_string = f'''
-👉 /{BotCommands.CloneCommand} [drive_url] : `Copy file/folder to Google Drive.`
-👉 /{BotCommands.CountCommand} [drive_url] : `Count file/folder of Google Drive.`
-👉 /{BotCommands.DeleteCommand} [drive_url] : `Delete file/folder from Google Drive (Only Owner & Sudo).`
-👉 /{BotCommands.CancelMirror} : `Cancel task by gid or reply.`
-👉 /{BotCommands.CancelAllCommand} [query] : `Cancel all [status] tasks.`
-👉 /{BotCommands.ListCommand} [query] : `Search in Google Drive(s).`
-👉 /{BotCommands.LogCommand} : `Get a log file of the bot. Handy for getting crash reports (Owner Only).`
-👉 /{BotCommands.RestartCommand} : `Restart and update the bot (Owner Only).`
-👉 /{BotCommands.StatusCommand} : `Shows a status of all the downloads.`
-👉 /{BotCommands.StatsCommand} : `Show stats of the machine where the bot is hosted in.`
-👉 /{BotCommands.PingCommand} : `Check how long it takes to Ping the Bot (Owner Only).`
+<b><u>Google Drive</u></b>
+/{BotCommands.CloneCommand} [drive_url] - Copy file/folder to Google Drive.
+/{BotCommands.CountCommand} [drive_url] - Count file/folder of Google Drive.
+/{BotCommands.DeleteCommand} [drive_url] - Delete file/folder from Google Drive (Only Owner & Sudo).
+/{BotCommands.ListCommand} [query] - Search in Google Drive(s).
 
-NOTE: __Try each command without any argument to see more detalis.__
+<b><u>Task Control</u></b>
+/{BotCommands.CancelMirror} - Cancel task by gid or reply.
+/{BotCommands.CancelAllCommand} [query] - Cancel all [status] tasks.
+/{BotCommands.StatusCommand} - Shows a status of all the downloads.
+
+<b><u>Bot Control</u></b>
+/{BotCommands.LogCommand} - Get a log file of the bot. Handy for getting crash reports (Owner Only).
+/{BotCommands.PingCommand} - Check how long it takes to Ping the Bot (Owner Only).
+/{BotCommands.RestartCommand} - Restart and update the bot (Owner Only).
+/{BotCommands.StatsCommand} - Show stats of the machine where the bot is hosted in.
+
+NOTE: <i>Try each command without any argument to see more detalis.</i>
 '''
 
 def bot_help(update, context):
