@@ -68,6 +68,9 @@ RootDrive root https://example.workers.dev/0:
 TeamDrive1 0AO1JDB1t3i5jUk9PVA https://example.workers.dev/1:
 TeamDrive2 0A10hdb1t67hjYrTyVA https://example.workers.dev/2:
 ```
+It goes without saying but you need to have access to these drives in order to search in them. Another thing to note that if you're using this bot with SA only and your SA group doesn't have access to these drives/folders, you can't search in them.
+
+After you're done, upload the `drives.txt` file along with `token.pickle` and/or `accounts.zip` and set the direct link to this file as `DRIVES_TXT` variable.
 
 ## Planned Features
 - [ ] Setup Google credentials (token.pickle) using the bot interface.
