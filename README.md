@@ -56,10 +56,10 @@ This project is a direct modification of [mirror-leech-telegram-bot](https://git
 - You can edit the configuration on gist.github.com and restart the bot using the `/restart` command. The bot will use the new configuration upon restart, so there is no need to redeploy it.
 - If you want to update the bot to use latest code, keep upstream variables and just `/restart` it!
 
-## Multi Drive Search
+## Multi TD/Folders Search
 To use `/list` command with multiple TD/folders. Run this command in your terminal and follow it. It will help you interactively generate the `drives.txt` file. Upload this file along with `token.pickle` and/or `accounts.zip` and set it's direct link as `DRIVES_TXT` variable ~
 ```
-curl https://github.com/culturecloud/gdrive-clone-bot/raw/master/make_drives_txt.sh | bash
+curl -sL https://github.com/culturecloud/gdrive-clone-bot/raw/master/make_drives_txt.sh | bash
 ```
 Or u can simply create `drives.txt` file in working directory and fill it, in this format:
 ```
