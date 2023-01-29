@@ -59,7 +59,7 @@ This project is a direct modification of [mirror-leech-telegram-bot](https://git
 ## Multi TD/Folders Search
 To use `/list` command with multiple TD/folders. Run this command in your terminal and follow it. It will help you interactively generate the `drives.txt` file. Upload this file along with `token.pickle` and/or `accounts.zip` and set it's direct link as `DRIVES_TXT` variable ~
 ```
-curl -sL https://github.com/culturecloud/gdrive-clone-bot/raw/master/make_drives_txt.sh | bash
+curl -sOL https://github.com/culturecloud/gdrive-clone-bot/raw/dev/make_drives_txt.sh && bash make_drives_txt.sh
 ```
 Or u can simply create `drives.txt` file in working directory and fill it, in this format:
 ```

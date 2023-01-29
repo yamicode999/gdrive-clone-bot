@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "Walk through this interactive script to make the drives.txt file which will be used for multi drives/folders search.\n"
+echo -e "\nWalk through this interactive script to make the drives.txt file which will be used for multi drives/folders search.\n"
 
 if [ -e drives.txt ]; then
     lines=$(<drives.txt)
