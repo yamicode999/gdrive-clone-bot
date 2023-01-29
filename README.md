@@ -17,19 +17,24 @@ This project is a direct modification of [mirror-leech-telegram-bot](https://git
 3. Create a gist named `something.env`. Fill in the following variables and add them to the gist:
     ```
     # Required Variables
+    # Should be self-explanatory
+    
     TELEGRAM_API = ""
     TELEGRAM_HASH = ""
     OWNER_ID = ""
     BOT_TOKEN = ""
     
     # Optional (but required) Variables
+    # Read the attached comments carefullly before filling them
+    
     ACCOUNTS_ZIP = "" # direct link to accounts.zip file
-    AUTHORIZED_CHATS = ""
-    AUTO_DELETE_MESSAGE_DURATION = "30"
-    CMD_SUFFIX = ""
-    GDRIVE_ID = ""
+    AUTHORIZED_CHATS = "" # user/group ids
+    AUTO_DELETE_MESSAGE_DURATION = "30" # no need to change
+    CMD_SUFFIX = "" # should be alphanumeric
+    DRIVES_TXT = "" # direct link to drives.txt file
+    GDRIVE_ID = "" # ID of the destination drive or 'root'
     INDEX_URL = "https://something.someone.workers.dev/0:" # you know what to set
-    IS_TEAM_DRIVE = "True"
+    IS_TEAM_DRIVE = "True" # or False
     SERVER_PORT = "" # don't set anything if you're deploying on Render
     STATUS_LIMIT = "4" # no need to change
     STATUS_UPDATE_INTERVAL = "10" # no need to change
@@ -50,6 +55,22 @@ This project is a direct modification of [mirror-leech-telegram-bot](https://git
 ## Exrtra Notes
 - You can edit the configuration on gist.github.com and restart the bot using the `/restart` command. The bot will use the new configuration upon restart, so there is no need to redeploy it.
 - If you want to update the bot to use latest code, keep upstream variables and just `/restart` it!
+
+## Multi Drive Search
+To use `/list` command with multiple TD/folders. Run this command in your terminal and follow it. It will help you interactively generate the `drives.txt` file. Upload this file along with `token.pickle` and/or `accounts.zip` and set it's direct link as `DRIVES_TXT` variable ~
+```
+curl https://github.com/culturecloud/gdrive-clone-bot/raw/master/make_drives_txt.sh | bash
+```
+Or u can simply create `drives.txt` file in working directory and fill it, in this format:
+```
+DriveName folderID/tdID IndexLink(if available)
+DriveName folderID/tdID IndexLink(if available)
+```
+Example:
+```
+TeamDrive1 root https://example.workers.dev/0:
+TeamDrive2 0AO1JDB1t3i5jUk9PVA https://example.workers.dev/1:
+```
 
 ## Planned Features
 - [ ] Setup Google credentials (token.pickle) using the bot interface.
