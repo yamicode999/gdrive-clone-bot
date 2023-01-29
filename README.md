@@ -57,19 +57,16 @@ This project is a direct modification of [mirror-leech-telegram-bot](https://git
 - If you want to update the bot to use latest code, keep upstream variables and just `/restart` it!
 
 ## Multi TD/Folders Search
-To use `/list` command with multiple TD/folders. Run this command in your terminal and follow it. It will help you interactively generate the `drives.txt` file. Upload this file along with `token.pickle` and/or `accounts.zip` and set it's direct link as `DRIVES_TXT` variable ~
-```
-curl -sOL https://github.com/culturecloud/gdrive-clone-bot/raw/dev/make_drives_txt.sh && bash make_drives_txt.sh
-```
-Or u can simply create `drives.txt` file in working directory and fill it, in this format:
+To use `/list` command with multiple TD/folders, simply make a file named `drives.txt` file in working directory and fill it, in the following format:
 ```
 DriveName folderID/tdID IndexLink(if available)
 DriveName folderID/tdID IndexLink(if available)
 ```
 Example:
 ```
-TeamDrive1 root https://example.workers.dev/0:
-TeamDrive2 0AO1JDB1t3i5jUk9PVA https://example.workers.dev/1:
+RootDrive root https://example.workers.dev/0:
+TeamDrive1 0AO1JDB1t3i5jUk9PVA https://example.workers.dev/1:
+TeamDrive2 0A10hdb1t67hjYrTyVA https://example.workers.dev/2:
 ```
 
 ## Planned Features

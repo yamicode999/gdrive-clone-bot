@@ -48,7 +48,8 @@ if CONFIG_ENV:
     log_info("CONFIG_ENV variable found! Downloading config file ...")
     download_file = srun(["curl", "-sL", f"{CONFIG_ENV}", "-o", "config.env"])
     if download_file.returncode == 0:
-        log_info("Config file downloaded as 'config.env'")
+        load_dotenv('config.env', override=True)
+        log_info("Config file has been downloaded and loaded in current environment")
     else:
         log_error("Something went wrong while downloading config file! please recheck the CONFIG_ENV variable")
         exit(1)
@@ -75,8 +76,7 @@ if ACCOUNTS_ZIP:
         log_error("Something went wrong while downloading Service Accounts zip file! please recheck the ACCOUNTS_ZIP variable")
 
 if TOKEN_PICKLE is None and ACCOUNTS_ZIP is None:
-    print("Neither TOKEN_PICKLE nor ACCOUNTS_ZIP variable has been provided! Exiting now ...")
-    exit(1)
+    log_warning("Neither TOKEN_PICKLE nor ACCOUNTS_ZIP variable has been provided! If you don't provide either token.pickle or accounts.zip you won't be able to use this bot.")
 
 DRIVES_TXT = environ.get('DRIVES_TXT', None)
 if DRIVES_TXT:
@@ -86,34 +86,6 @@ if DRIVES_TXT:
         log_info("Drives list downloaded as 'drives.txt'")
     else:
         log_error("Something went wrong while downloading drives list file! please recheck the DRIVES_TXT variable")
-
-load_dotenv('config.env', override=True)
-
-UPSTREAM_REPO = environ.get('UPSTREAM_REPO', '')
-if len(UPSTREAM_REPO) == 0:
-   UPSTREAM_REPO = None
-
-UPSTREAM_BRANCH = environ.get('UPSTREAM_BRANCH', '')
-if len(UPSTREAM_BRANCH) == 0:
-    UPSTREAM_BRANCH = 'main'
-
-if UPSTREAM_REPO:
-    if ospath.exists('.git'):
-        srun(["rm", "-rf", ".git"])
-
-    fetch_updates = srun([f"git init -q \
-                     && git config --global user.email pseudokawaii@gmail.com \
-                     && git config --global user.name pseudokawaii \
-                     && git add . \
-                     && git commit -sm update -q \
-                     && git remote add origin {UPSTREAM_REPO} \
-                     && git fetch origin -q \
-                     && git reset --hard origin/{UPSTREAM_BRANCH} -q"], shell=True)
-
-    if fetch_updates.returncode == 0:
-        log_info(f'Successfully pulled latest commits from \'{UPSTREAM_BRANCH}\' branch of {UPSTREAM_REPO}')
-    else:
-        log_error('Something went wrong while updating, recheck UPSTREAM_REPO variable!')
 
 BOT_TOKEN = environ.get('BOT_TOKEN', '')
 if len(BOT_TOKEN) == 0:
