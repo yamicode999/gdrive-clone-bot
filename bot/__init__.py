@@ -1,5 +1,4 @@
 from logging import getLogger, FileHandler, StreamHandler, INFO, basicConfig, error as log_error, info as log_info, warning as log_warning
-import sys
 from socket import setdefaulttimeout
 from faulthandler import enable as faulthandler_enable
 from telegram.ext import Updater as tgUpdater, Defaults
@@ -49,13 +48,14 @@ if CONFIG_ENV:
     log_info("CONFIG_ENV variable found! Downloading config file ...")
     download_file = srun(["curl", "-sL", f"{CONFIG_ENV}", "-o", "config.env"])
     if download_file.returncode == 0:
-        log_info("Config file downloaded as 'config.env'")
+        load_dotenv('config.env', override=True)
+        log_info("Config file has been downloaded and loaded in current environment")
     else:
         log_error("Something went wrong while downloading config file! please recheck the CONFIG_ENV variable")
-        sys.exit(1)
+        exit(1)
 else:
-    log_warning("CONFIG_ENV variable not found! exiting ...")
-    sys.exit(1)
+    log_error("CONFIG_ENV variable not found! exiting ...")
+    exit(1)
 
 TOKEN_PICKLE = environ.get('TOKEN_PICKLE', None)
 if TOKEN_PICKLE:
@@ -69,39 +69,23 @@ if TOKEN_PICKLE:
 ACCOUNTS_ZIP = environ.get('ACCOUNTS_ZIP', None)
 if ACCOUNTS_ZIP:
     log_info("ACCOUNTS_ZIP variable found! Downloading accounts.zip file ...")
-    download_file = srun(["curl", "-sL", f"{environ.get('ACCOUNTS_ZIP')}", "-o", "accounts.zip"])
+    download_file = srun(["curl", "-sL", f"{ACCOUNTS_ZIP}", "-o", "accounts.zip"])
     if download_file.returncode == 0:
         log_info("Service Accounts zip file downloaded as 'accounts.zip'")
     else:
         log_error("Something went wrong while downloading Service Accounts zip file! please recheck the ACCOUNTS_ZIP variable")
 
-load_dotenv('config.env', override=True)
+if TOKEN_PICKLE is None and ACCOUNTS_ZIP is None:
+    log_warning("Neither TOKEN_PICKLE nor ACCOUNTS_ZIP variable has been provided! If you don't provide either token.pickle or accounts.zip you won't be able to use this bot.")
 
-UPSTREAM_REPO = environ.get('UPSTREAM_REPO', '')
-if len(UPSTREAM_REPO) == 0:
-   UPSTREAM_REPO = None
-
-UPSTREAM_BRANCH = environ.get('UPSTREAM_BRANCH', '')
-if len(UPSTREAM_BRANCH) == 0:
-    UPSTREAM_BRANCH = 'main'
-
-if UPSTREAM_REPO:
-    if ospath.exists('.git'):
-        srun(["rm", "-rf", ".git"])
-
-    fetch_updates = srun([f"git init -q \
-                     && git config --global user.email pseudokawaii@gmail.com \
-                     && git config --global user.name pseudokawaii \
-                     && git add . \
-                     && git commit -sm update -q \
-                     && git remote add origin {UPSTREAM_REPO} \
-                     && git fetch origin -q \
-                     && git reset --hard origin/{UPSTREAM_BRANCH} -q"], shell=True)
-
-    if fetch_updates.returncode == 0:
-        log_info('Successfully updated with latest commit from UPSTREAM_REPO')
+DRIVES_TXT = environ.get('DRIVES_TXT', None)
+if DRIVES_TXT:
+    log_info("DRIVES_TXT variable found! Downloading drives.txt file ...")
+    download_file = srun(["curl", "-sL", f"{DRIVES_TXT}", "-o", "drives.txt"])
+    if download_file.returncode == 0:
+        log_info("Drives list downloaded as 'drives.txt'")
     else:
-        log_error('Something went wrong while updating, recheck UPSTREAM_REPO variable!')
+        log_error("Something went wrong while downloading drives list file! please recheck the DRIVES_TXT variable")
 
 BOT_TOKEN = environ.get('BOT_TOKEN', '')
 if len(BOT_TOKEN) == 0:
@@ -204,6 +188,18 @@ if GDRIVE_ID:
     DRIVES_IDS.append(GDRIVE_ID)
     INDEX_URLS.append(INDEX_URL)
 
+if ospath.exists('drives.txt'):
+    with open('drives.txt', 'r+') as f:
+        lines = f.readlines()
+        for line in lines:
+            temp = line.strip().split()
+            DRIVES_IDS.append(temp[1])
+            DRIVES_NAMES.append(temp[0].replace("_", " "))
+            if len(temp) > 2:
+                INDEX_URLS.append(temp[2])
+            else:
+                INDEX_URLS.append('')
+                
 if ospath.exists('accounts.zip'):
     if ospath.exists('accounts'):
         srun(["rm", "-rf", "accounts"])

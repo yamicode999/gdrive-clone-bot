@@ -1,5 +1,5 @@
 from signal import signal, SIGINT
-from os import path as ospath, remove as osremove, execl as osexecl
+from os import path as ospath, remove as osremove, execl as osexecl, environ
 from subprocess import run as srun, check_output
 from psutil import disk_usage, cpu_percent, swap_memory, cpu_count, virtual_memory, net_io_counters, boot_time
 from time import time
@@ -54,6 +54,33 @@ def restart(update, context):
     restart_message = sendMessage("Restarting...", context.bot, update.message)
     LOGGER.info("Stopping HTTP server ...")
     srun(["pkill", "-9", "-f", "gunicorn"])
+    
+    UPSTREAM_REPO = environ.get('UPSTREAM_REPO', '')
+    if len(UPSTREAM_REPO) == 0:
+       UPSTREAM_REPO = None
+    
+    UPSTREAM_BRANCH = environ.get('UPSTREAM_BRANCH', '')
+    if len(UPSTREAM_BRANCH) == 0:
+        UPSTREAM_BRANCH = 'main'
+    
+    if UPSTREAM_REPO:
+        if ospath.exists('.git'):
+            srun(["rm", "-rf", ".git"])
+    
+        fetch_updates = srun([f"git init -q \
+                         && git config --global user.email pseudokawaii@gmail.com \
+                         && git config --global user.name pseudokawaii \
+                         && git add . \
+                         && git commit -sm update -q \
+                         && git remote add origin {UPSTREAM_REPO} \
+                         && git fetch origin -q \
+                         && git reset --hard origin/{UPSTREAM_BRANCH} -q"], shell=True)
+    
+        if fetch_updates.returncode == 0:
+            LOGGER.info(f'Successfully pulled latest commits from \'{UPSTREAM_BRANCH}\' branch of {UPSTREAM_REPO}')
+        else:
+            LOGGER.error('Something went wrong while updating, recheck UPSTREAM_REPO variable!')
+            
     with open(".restartmsg", "w") as f:
         f.truncate(0)
         f.write(f"{restart_message.chat.id}\n{restart_message.message_id}\n")

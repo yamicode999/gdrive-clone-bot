@@ -193,6 +193,6 @@ data*
 *.pickle
 log.txt
 accounts/*
-list_drives.txt
+drives.txt
 .restartmsg
 downloads
