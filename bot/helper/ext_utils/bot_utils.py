@@ -17,7 +17,7 @@ COUNT = 0
 PAGE_NO = 1
 PAGES = 0
 
-class MirrorStatus:
+class BotStatus:
     STATUS_CLONING = "Clone"
     STATUS_CHECKING = "CheckUp"
 
@@ -93,7 +93,7 @@ def get_readable_message():
             msg += f"\n{get_progress_bar_string(download)} {download.progress()}"
             msg += f"\n<b>Processed:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
             msg += f"\n<b>Speed:</b> {download.speed()} | <b>ETA:</b> {download.eta()}"
-            msg += f"\n<code>/{BotCommands.CancelMirror} {download.gid()}</code>"
+            msg += f"\n<code>/{BotCommands.CancelClone} {download.gid()}</code>"
             msg += "\n\n"
             if index == STATUS_LIMIT:
                 break

@@ -1,4 +1,3 @@
-from signal import signal, SIGINT
 from os import path as ospath, remove as osremove, execl as osexecl, environ
 from subprocess import run as srun, check_output
 from psutil import disk_usage, cpu_percent, swap_memory, cpu_count, virtual_memory, net_io_counters, boot_time
@@ -13,7 +12,7 @@ from .helper.telegram_helper.bot_commands import BotCommands
 from .helper.telegram_helper.message_utils import sendMessage, editMessage, sendLogFile
 from .helper.telegram_helper.filters import CustomFilters
 from .helper.telegram_helper.button_build import ButtonMaker
-from .modules import list, cancel_mirror, clone, delete, count, mirror_status
+from .modules import list, cancel_clone, clone, delete, count, status
 
 
 def stats(update, context):
@@ -77,7 +76,7 @@ help_string = f'''
 /{BotCommands.ListCommand} [query] - Search in Google Drive(s).
 
 <b><u>Task Control</u></b>
-/{BotCommands.CancelMirror} - Cancel task by gid or reply.
+/{BotCommands.CancelClone} - Cancel task by gid or reply.
 /{BotCommands.CancelAllCommand} [query] - Cancel all [status] tasks.
 /{BotCommands.StatusCommand} - Shows a status of all the downloads.
 

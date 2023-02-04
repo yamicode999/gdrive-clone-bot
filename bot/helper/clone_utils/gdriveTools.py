@@ -193,7 +193,7 @@ class GoogleDriveHelper:
     def __create_directory(self, directory_name, dest_id):
         file_metadata = {
             "name": directory_name,
-            "description": "Uploaded by Culture Cloud",
+            "description": "Cloned by Culture Cloud",
             "mimeType": self.__G_DRIVE_DIR_MIME_TYPE
         }
         if dest_id is not None:

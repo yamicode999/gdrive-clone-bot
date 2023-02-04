@@ -5,7 +5,7 @@ from telegram.ext import Updater as tgUpdater, Defaults
 from os import remove as osremove, path as ospath, environ
 from subprocess import Popen, run as srun, PIPE
 from time import sleep, time
-from threading import Thread, Lock
+from threading import Lock
 from dotenv import load_dotenv
 from asyncio import get_event_loop
 
