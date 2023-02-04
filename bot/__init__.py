@@ -43,50 +43,6 @@ if ospath.exists('log.txt'):
     with open('log.txt', 'r+') as f:
         f.truncate(0)
 
-CONFIG_ENV = environ.get('CONFIG_ENV', None)
-if CONFIG_ENV:
-    log_info("CONFIG_ENV variable found! Downloading config file ...")
-    download_file = srun(["curl", "-sL", f"{CONFIG_ENV}", "-o", "config.env"])
-    if download_file.returncode == 0:
-        load_dotenv('config.env', override=True)
-        log_info("Config file has been downloaded and loaded in current environment")
-    else:
-        log_error("Something went wrong while downloading config file! please recheck the CONFIG_ENV variable")
-        exit(1)
-else:
-    log_error("CONFIG_ENV variable not found! exiting ...")
-    exit(1)
-
-TOKEN_PICKLE = environ.get('TOKEN_PICKLE', None)
-if TOKEN_PICKLE:
-    log_info("TOKEN_PICKLE variable found! Downloading token.pickle file ...")
-    download_file = srun(["curl", "-sL", f"{TOKEN_PICKLE}", "-o", "token.pickle"])
-    if download_file.returncode == 0:
-        log_info("Pickle file downloaded as 'token.pickle'")
-    else:
-        log_error("Something went wrong while downloading token.pickle file! please recheck the TOKEN_PICKLE variable")
-
-ACCOUNTS_ZIP = environ.get('ACCOUNTS_ZIP', None)
-if ACCOUNTS_ZIP:
-    log_info("ACCOUNTS_ZIP variable found! Downloading accounts.zip file ...")
-    download_file = srun(["curl", "-sL", f"{ACCOUNTS_ZIP}", "-o", "accounts.zip"])
-    if download_file.returncode == 0:
-        log_info("Service Accounts zip file downloaded as 'accounts.zip'")
-    else:
-        log_error("Something went wrong while downloading Service Accounts zip file! please recheck the ACCOUNTS_ZIP variable")
-
-if TOKEN_PICKLE is None and ACCOUNTS_ZIP is None:
-    log_warning("Neither TOKEN_PICKLE nor ACCOUNTS_ZIP variable has been provided! If you don't provide either token.pickle or accounts.zip you won't be able to use this bot.")
-
-DRIVES_TXT = environ.get('DRIVES_TXT', None)
-if DRIVES_TXT:
-    log_info("DRIVES_TXT variable found! Downloading drives.txt file ...")
-    download_file = srun(["curl", "-sL", f"{DRIVES_TXT}", "-o", "drives.txt"])
-    if download_file.returncode == 0:
-        log_info("Drives list downloaded as 'drives.txt'")
-    else:
-        log_error("Something went wrong while downloading drives list file! please recheck the DRIVES_TXT variable")
-
 BOT_TOKEN = environ.get('BOT_TOKEN', '')
 if len(BOT_TOKEN) == 0:
     log_error("BOT_TOKEN variable is missing! Exiting now")
@@ -210,7 +166,7 @@ if not ospath.exists('accounts'):
     config_dict['USE_SERVICE_ACCOUNTS'] = False
 sleep(0.5)
 
-Popen(["gunicorn", "web.wserver:app", "--bind", f"0.0.0.0:{SERVER_PORT}", "--access-logfile", "/dev/null", "--error-logfile", "/dev/null"])
+Popen(["gunicorn", "web.wserver:app", "--bind", f"0.0.0.0:{SERVER_PORT}", "--access-logfile=/dev/null", "--error-logfile=/dev/null"])
 log_info(f"HTTP server started at port {SERVER_PORT}")
 
 tgDefaults = Defaults(parse_mode='HTML', disable_web_page_preview=True, allow_sending_without_reply=True, run_async=True)
