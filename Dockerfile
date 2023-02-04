@@ -37,4 +37,4 @@ ENV PATH="/opt/venv/bin:$PATH"
 COPY . .
 
 ENTRYPOINT ["/tini", "--"]
-CMD ["python3", "-m", "bot"]
+CMD ["bash", "start.sh"]

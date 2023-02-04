@@ -12,6 +12,7 @@ This project is a direct modification of [mirror-leech-telegram-bot](https://git
 - [x] Built-in updater, portable configuration. Configure bot settings & stay up-to-date with the source, without redeploying!
 
 ## How the fuck do you setup this shit?
+0. Fork this repo.
 1. Google Credentials! Create a `token.pickle` file and/or `accounts.zip` (for SA support). Follow [this guide](https://github.com/weebzone/WZML/wiki/Deployment#getting-google-oauth-api-credential-file-and-tokenpickle) to obtain them.
 2. Upload the credential files to a secure location where you can obtain a direct link to them. Such as your root drive's personal index.
 3. Create a gist named `something.env`. Fill in the following variables and add them to the gist:
@@ -24,14 +25,19 @@ This project is a direct modification of [mirror-leech-telegram-bot](https://git
     OWNER_ID = ""
     BOT_TOKEN = ""
     
+    # Bot Private Files
+    # ONLY DIRECT LINKS ARE SUPPORTED
+    
+    ACCOUNTS_ZIP = "" # direct link to accounts.zip file
+    DRIVES_TXT = "" # direct link to drives.txt file
+    TOKEN_PICKLE = "" # direct link to token.pickle file
+    
     # Optional (but required) Variables
     # Read the attached comments carefullly before filling them
     
-    ACCOUNTS_ZIP = "" # direct link to accounts.zip file
     AUTHORIZED_CHATS = "" # user/group ids
     AUTO_DELETE_MESSAGE_DURATION = "30" # no need to change
     CMD_SUFFIX = "" # should be alphanumeric
-    DRIVES_TXT = "" # direct link to drives.txt file
     GDRIVE_ID = "" # ID of the destination drive or 'root'
     INDEX_URL = "https://something.someone.workers.dev/0:" # you know what to set
     IS_TEAM_DRIVE = "True" # or False
@@ -39,7 +45,6 @@ This project is a direct modification of [mirror-leech-telegram-bot](https://git
     STATUS_LIMIT = "4" # no need to change
     STATUS_UPDATE_INTERVAL = "10" # no need to change
     STOP_DUPLICATE = "True" # or False
-    TOKEN_PICKLE = "" # direct link to token.pickle file
     UPSTREAM_BRANCH = "main" # don't change this
     UPSTREAM_REPO = "https://github.com/culturecloud/gdrive-clone-bot" # don't change this to keep the bot up-to-date
     USE_SERVICE_ACCOUNTS = "True" # or False

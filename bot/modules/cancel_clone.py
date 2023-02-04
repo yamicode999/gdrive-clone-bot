@@ -6,11 +6,11 @@ from bot import download_dict, dispatcher, download_dict_lock, OWNER_ID, user_da
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.telegram_helper.filters import CustomFilters
 from bot.helper.telegram_helper.message_utils import sendMessage, auto_delete_message
-from bot.helper.ext_utils.bot_utils import getDownloadByGid, getAllDownload, new_thread, MirrorStatus
+from bot.helper.ext_utils.bot_utils import getDownloadByGid, getAllDownload, new_thread, BotStatus
 from bot.helper.telegram_helper import button_build
 
 
-def cancel_mirror(update, context):
+def cancel_clone(update, context):
     user_id = update.message.from_user.id
     if len(context.args) == 1:
         gid = context.args[0]
@@ -19,10 +19,10 @@ def cancel_mirror(update, context):
             sendMessage(f"GID: <code>{gid}</code> Not Found.", context.bot, update.message)
             return
     elif update.message.reply_to_message:
-        mirror_message = update.message.reply_to_message
+        clone_message = update.message.reply_to_message
         with download_dict_lock:
-            if mirror_message.message_id in download_dict:
-                dl = download_dict[mirror_message.message_id]
+            if clone_message.message_id in download_dict:
+                dl = download_dict[clone_message.message_id]
             else:
                 dl = None
         if not dl:
@@ -30,7 +30,7 @@ def cancel_mirror(update, context):
             return
     elif len(context.args) == 0:
         msg = f"Reply to an active Command message which was used to start the download" \
-              f" or send <code>/{BotCommands.CancelMirror} GID</code> to cancel it!"
+              f" or send <code>/{BotCommands.CancelClone} GID</code> to cancel it!"
         sendMessage(msg, context.bot, update.message)
         return
 
@@ -56,7 +56,7 @@ def cancell_all_buttons(update, context):
         sendMessage("No active tasks!", context.bot, update.message)
         return
     buttons = button_build.ButtonMaker()
-    buttons.sbutton("Cloning", f"canall {MirrorStatus.STATUS_CLONING}")
+    buttons.sbutton("Cloning", f"canall {BotStatus.STATUS_CLONING}")
     buttons.sbutton("All", "canall all")
     buttons.sbutton("Close", "canall close")
     button = buttons.build_menu(2)
@@ -80,12 +80,12 @@ def cancel_all_update(update, context):
         query.answer(text="You don't have permission to use these buttons!", show_alert=True)
 
 
-cancel_mirror_handler = CommandHandler(BotCommands.CancelMirror, cancel_mirror,
+cancel_clone_handler = CommandHandler(BotCommands.CancelClone, cancel_clone,
                                    filters=(CustomFilters.authorized_chat | CustomFilters.authorized_user))
 cancel_all_handler = CommandHandler(BotCommands.CancelAllCommand, cancell_all_buttons,
                                    filters=CustomFilters.owner_filter)
 cancel_all_buttons_handler = CallbackQueryHandler(cancel_all_update, pattern="canall")
 
 dispatcher.add_handler(cancel_all_handler)
-dispatcher.add_handler(cancel_mirror_handler)
+dispatcher.add_handler(cancel_clone_handler)
 dispatcher.add_handler(cancel_all_buttons_handler)
