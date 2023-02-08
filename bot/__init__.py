@@ -166,7 +166,7 @@ if not ospath.exists('accounts'):
     config_dict['USE_SERVICE_ACCOUNTS'] = False
 sleep(0.5)
 
-Popen(["gunicorn", "web.wserver:app", "--bind", f"0.0.0.0:{SERVER_PORT}", "--access-logfile=/dev/null", "--error-logfile=/dev/null"])
+Popen(["gunicorn", "web.server:app", "--bind", f"0.0.0.0:{SERVER_PORT}", "--access-logfile=/dev/null", "--error-logfile=log.txt"])
 log_info(f"HTTP server started at port {SERVER_PORT}")
 
 tgDefaults = Defaults(parse_mode='HTML', disable_web_page_preview=True, allow_sending_without_reply=True, run_async=True)
