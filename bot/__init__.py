@@ -1,4 +1,5 @@
-from logging import getLogger, FileHandler, StreamHandler, INFO, basicConfig, error as log_error, info as log_info, warning as log_warning
+import logging
+
 from socket import setdefaulttimeout
 from faulthandler import enable as faulthandler_enable
 from telegram.ext import Updater as tgUpdater, Defaults
@@ -8,6 +9,10 @@ from time import sleep, time
 from threading import Lock
 from dotenv import load_dotenv
 from asyncio import get_event_loop
+from bot.log_config import configure_logger
+
+configure_logger()
+LOGGER = logging.getLogger(__name__)
 
 main_loop = get_event_loop()
 
@@ -16,12 +21,6 @@ faulthandler_enable()
 setdefaulttimeout(600)
 
 botStartTime = time()
-
-basicConfig(format='[%(levelname)s] [%(name)s] [%(lineno)d] %(message)s',
-                    handlers=[FileHandler('log.txt'), StreamHandler()],
-                    level=INFO)
-
-LOGGER = getLogger(__name__)
 
 Interval = []
 DRIVES_NAMES = []
@@ -42,29 +41,31 @@ download_dict = {}
 if ospath.exists('log.txt'):
     with open('log.txt', 'r+') as f:
         f.truncate(0)
+        
+load_dotenv('config.env', override=True)
 
 BOT_TOKEN = environ.get('BOT_TOKEN', '')
 if len(BOT_TOKEN) == 0:
-    log_error("BOT_TOKEN variable is missing! Exiting now")
+    LOGGER.error("BOT_TOKEN variable is missing! Exiting now")
     exit(1)
 
 OWNER_ID = environ.get('OWNER_ID', '')
 if len(OWNER_ID) == 0:
-    log_error("OWNER_ID variable is missing! Exiting now")
+    LOGGER.error("OWNER_ID variable is missing! Exiting now")
     exit(1)
 else:
     OWNER_ID = int(OWNER_ID)
 
 TELEGRAM_API = environ.get('TELEGRAM_API', '')
 if len(TELEGRAM_API) == 0:
-    log_error("TELEGRAM_API variable is missing! Exiting now")
+    LOGGER.error("TELEGRAM_API variable is missing! Exiting now")
     exit(1)
 else:
     TELEGRAM_API = int(TELEGRAM_API)
 
 TELEGRAM_HASH = environ.get('TELEGRAM_HASH', '')
 if len(TELEGRAM_HASH) == 0:
-    log_error("TELEGRAM_HASH variable is missing! Exiting now")
+    LOGGER.error("TELEGRAM_HASH variable is missing! Exiting now")
     exit(1)
 
 GDRIVE_ID = environ.get('GDRIVE_ID', '')
@@ -166,8 +167,7 @@ if not ospath.exists('accounts'):
     config_dict['USE_SERVICE_ACCOUNTS'] = False
 sleep(0.5)
 
-Popen(["gunicorn", "web.server:app", "--bind", f"0.0.0.0:{SERVER_PORT}", "--access-logfile=/dev/null", "--error-logfile=log.txt"])
-log_info(f"HTTP server started at port {SERVER_PORT}")
+Popen(["gunicorn", "web.server:app", f"--bind=0.0.0.0:{SERVER_PORT}", "--logger-class=web.log_config.StubbedGunicornLogger"])
 
 tgDefaults = Defaults(parse_mode='HTML', disable_web_page_preview=True, allow_sending_without_reply=True, run_async=True)
 updater = tgUpdater(token=BOT_TOKEN, defaults=tgDefaults, request_kwargs={'read_timeout': 20, 'connect_timeout': 15})
